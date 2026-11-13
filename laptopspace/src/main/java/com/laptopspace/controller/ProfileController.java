@@ -56,7 +56,11 @@ public class ProfileController {
         User user = userRepository.findByUsernameOrEmailOrPhone(principal.getName());
         
         // Kiểm tra mật khẩu cũ có khớp trong DB không
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        // if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        //     ra.addFlashAttribute("msg_error", "Mật khẩu cũ không chính xác!");
+        //     return "redirect:/user/profile";
+        // } -- hàm băm
+        if (!(oldPassword.equals(user.getPassword()))) {
             ra.addFlashAttribute("msg_error", "Mật khẩu cũ không chính xác!");
             return "redirect:/user/profile";
         }
@@ -68,7 +72,8 @@ public class ProfileController {
         }
         
         // Mã hóa pass mới và lưu
-        user.setPassword(passwordEncoder.encode(newPassword));
+        //user.setPassword(passwordEncoder.encode(newPassword)); - hàm băm
+        user.setPassword(newPassword);
         userRepository.save(user);
         ra.addFlashAttribute("msg_success", "Đổi mật khẩu thành công! Vui lòng đăng nhập lại lần sau với mật khẩu mới.");
         

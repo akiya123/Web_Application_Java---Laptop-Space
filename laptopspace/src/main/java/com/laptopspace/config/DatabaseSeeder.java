@@ -33,7 +33,8 @@ public class DatabaseSeeder implements CommandLineRunner {
             // NẾU CHƯA CÓ: Tạo mới tinh
             User newAdmin = new User();
             newAdmin.setUsername("admin@laptopspace.com");
-            newAdmin.setPassword(passwordEncoder.encode("123456")); 
+            newAdmin.setPassword("123456"); 
+            //newAdmin.setPassword(passwordEncoder.encode("123456")); - hàm băm
             newAdmin.setFullName("Quản trị viên Hệ thống");
             newAdmin.setEmail("admin@laptopspace.com");
             newAdmin.setPhone("0987654321");

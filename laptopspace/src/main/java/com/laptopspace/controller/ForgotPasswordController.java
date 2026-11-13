@@ -45,7 +45,8 @@ public class ForgotPasswordController {
         String newRandomPassword = UUID.randomUUID().toString().substring(0, 8);
         
         // 2. Lưu vào Database
-        user.setPassword(passwordEncoder.encode(newRandomPassword));
+        //user.setPassword(passwordEncoder.encode(newRandomPassword)); - hàm băm
+        user.setPassword(newRandomPassword);
         userRepository.save(user);
 
         // 3. Gửi mật khẩu mới vào Email của khách
