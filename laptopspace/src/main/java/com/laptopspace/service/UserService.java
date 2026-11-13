@@ -18,7 +18,8 @@ public class UserService {
     // Lưu người dùng mới (Dành cho chức năng Đăng ký)
     public void registerUser(User user) {
         // Mã hóa mật khẩu trước khi lưu
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // user.setPassword(passwordEncoder.encode(user.getPassword()));-hàm băm
+        user.setPassword(user.getPassword());
         // Mặc định khách đăng ký sẽ có quyền USER
         user.setRole("ROLE_USER");
         userRepository.save(user);

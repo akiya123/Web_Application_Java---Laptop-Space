@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -13,10 +14,15 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     // Khai báo công cụ mã hóa mật khẩu (BCrypt)
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    // @Bean
+    // public PasswordEncoder passwordEncoder() {
+    //     return new BCryptPasswordEncoder();
+    // }
+        @Bean
+        @SuppressWarnings("deprecation")
+        public PasswordEncoder passwordEncoder() {
+            return NoOpPasswordEncoder.getInstance(); // so sánh mật khẩu trực tiếp, không băm
+        }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
