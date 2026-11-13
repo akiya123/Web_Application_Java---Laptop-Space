@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Sản phẩm - LaptopSpace Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden text-gray-800">
+
+    <div th:replace="~{admin/fragments/sidebar :: sidebar('laptops')}"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        
+        <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0 z-10 shadow-sm">
+            <h1 class="text-xl font-bold text-gray-800">Danh sách Sản phẩm</h1>
+            <div class="flex items-center gap-4">
+                <a th:href="@{/admin/laptops/add}" class="bg-[#003f87] text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-800 transition flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">add</span> Thêm Laptop
+                </a>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 text-sm uppercase tracking-wide border-b border-gray-200">
+                            <th class="p-4 font-semibold">ID</th>
+                            <th class="p-4 font-semibold w-16">Hình</th>
+                            <th class="p-4 font-semibold w-1/4">Sản phẩm</th>
+                            <th class="p-4 font-semibold w-1/4">Cấu hình</th>
+                            <th class="p-4 font-semibold">Giá bán</th>
+                            <th class="p-4 font-semibold text-center">Tồn kho</th>
+                            <th class="p-4 font-semibold text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr th:each="laptop : ${laptops}" class="border-b border-gray-100 hover:bg-gray-50 transition">
+                            <td class="p-4 text-gray-500" th:text="${laptop.id}">1</td>
+                            <td class="p-4">
+                                <img th:src="${laptop.imageUrl}" class="w-12 h-12 object-contain bg-white border rounded p-1">
+                            </td>
+                            <td class="p-4">
+                                <div class="font-bold text-[#003f87]" th:text="${laptop.name}">Tên SP</div>
+                                <div class="text-[11px] text-[#fe6500] mt-1 font-semibold uppercase" th:if="${laptop.modelGroup != null and !laptop.modelGroup.isEmpty()}">
+                                    Mã nhóm: <span th:text="${laptop.modelGroup}"></span>
+                                </div>
+                            </td>
+                            <td class="p-4 text-xs text-gray-600 leading-relaxed">
+                                <div><span class="font-bold">CPU:</span> <span th:text="${laptop.cpu}"></span></div>
+                                <div><span class="font-bold">RAM:</span> <span th:text="${laptop.ram}"></span></div>
+                                <div><span class="font-bold">ROM:</span> <span th:text="${laptop.storage}"></span></div>
+                                <div><span class="font-bold">VGA:</span> <span th:text="${laptop.vga}"></span></div>
+                            </td>
+                            <td class="p-4 font-bold text-red-600" th:text="${#numbers.formatInteger(laptop.price, 3, 'POINT')} + ' ₫'">0₫</td>
+                            <td class="p-4 text-center font-bold" th:text="${laptop.stockQuantity}">10</td>
+                            <td class="p-4 text-center space-x-2">
+                                <a th:href="@{/admin/laptops/edit/{id}(id=${laptop.id})}" class="text-[#fe6500] hover:underline font-medium">Sửa</a>
+                                <a th:href="@{/admin/laptops/delete/{id}(id=${laptop.id})}" class="text-red-600 hover:underline font-medium" onclick="return confirm('Bạn có chắc chắn muốn xóa?');">Xóa</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(laptops)}">
+                            <td colspan="7" class="p-8 text-center text-gray-500">Chưa có sản phẩm nào trong hệ thống.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

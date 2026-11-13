@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <header th:fragment="header" class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm flex flex-col">
+        
+        <div class="flex items-center justify-between px-4 md:px-12 w-full max-w-[1240px] mx-auto h-20">
+            <a class="text-3xl font-black text-[#003f87] tracking-tight shrink-0" th:href="@{/}">LaptopSpace</a>
+
+            <div class="flex-1 max-w-2xl mx-8 hidden md:block">
+				<form th:action="@{/shop}" method="GET" class="hidden md:flex relative flex-1 max-w-md ml-8">
+				    <input name="keyword" th:value="${keyword}" class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2.5 pl-5 pr-12 text-body-md focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all shadow-sm" placeholder="Bạn cần tìm laptop gì hôm nay?" type="text"/>
+				    <button type="submit" class="absolute right-1.5 top-1.5 bg-primary text-on-primary w-9 h-9 rounded-full flex items-center justify-center hover:bg-primary-container hover:text-on-primary-container transition-colors">
+				        <span class="material-symbols-outlined text-[20px]">search</span>
+				    </button>
+				</form>
+            </div>
+			
+
+            <div class="flex items-center gap-6 shrink-0">
+				<a th:href="@{/user/orders}" class="p-2 text-gray-600 hover:text-[#003f87] transition-all flex items-center gap-1 group relative" title="Đơn hàng của tôi">
+				        <span class="material-symbols-outlined text-[28px]">receipt_long</span>
+				        <span class="hidden md:inline text-xs font-semibold text-gray-500 group-hover:text-[#003f87]">Đơn hàng</span>
+				</a>
+				
+                <a th:href="@{/cart}" class="text-gray-600 hover:text-[#003f87] transition-colors relative flex items-center">
+                    <span class="material-symbols-outlined text-[28px]">shopping_cart</span>
+                    <span th:text="${cartCount != null ? cartCount : 0}" class="absolute -top-1 -right-2 bg-[#fe6500] text-white text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white shadow-sm">0</span>
+                </a>
+
+                <div>
+                    <a sec:authorize="isAnonymous()" th:href="@{/login}" class="bg-[#003f87] text-white px-6 py-2 rounded-full font-semibold text-sm hover:bg-blue-800 transition-colors shadow-sm inline-block">
+                        Đăng nhập
+                    </a>
+
+                    <div sec:authorize="isAuthenticated()" class="flex items-center gap-2">
+                        
+                        <a th:href="@{/user/profile}" class="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer" title="Thông tin cá nhân">
+                            <span class="material-symbols-outlined text-[#003f87] text-3xl">account_circle</span>
+                            <div class="flex flex-col hidden sm:flex">
+                                <span class="text-[11px] text-gray-500 leading-none mb-0.5">Xin chào,</span>
+                                <span class="text-sm font-bold text-[#191c1d] leading-tight" sec:authentication="name">User</span>
+                            </div>
+                        </a>
+
+                        <a th:href="@{/logout}" class="text-gray-400 hover:text-red-600 p-1 ml-1 transition-colors" title="Đăng xuất">
+                            <span class="material-symbols-outlined text-[20px]">logout</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="hidden md:flex items-center justify-center gap-8 h-12 bg-white text-sm font-semibold text-gray-600 border-t border-gray-100">
+			<a class="text-[#003f87] border-b-2 border-[#003f87] h-full flex items-center" th:href="@{/shop}">Tất cả sản phẩm</a>
+            <a class="hover:text-[#003f87] h-full flex items-center transition-colors" th:href="@{/khuyen-mai}">Khuyến mãi Hot</a>
+            <a class="hover:text-[#003f87] h-full flex items-center transition-colors" th:href="@{/tra-gop}">Chính sách trả góp</a>
+            <a class="hover:text-[#003f87] h-full flex items-center transition-colors" th:href="@{/tin-tuc}">Tin công nghệ</a>
+
+            <a sec:authorize="hasRole('ADMIN')" class="text-red-600 font-bold hover:text-red-800 h-full flex items-center gap-1 border-l pl-8 border-gray-200 ml-2" th:href="@{/admin/orders}">
+                <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span> Quản lý hệ thống
+            </a>
+        </nav>
+        
+        <script>
+            window.addEventListener('pageshow', function (event) {
+                // event.persisted sẽ trả về 'true' nếu trang được tải lại từ Cache của trình duyệt
+                if (event.persisted) {
+                    window.location.reload(); // Ép trình duyệt f5 lại để gọi server lấy số giỏ hàng mới nhất
+                }
+            });
+        </script>
+
+    </header>
+</body>
+</html>

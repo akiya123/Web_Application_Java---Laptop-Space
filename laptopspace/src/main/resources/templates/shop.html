@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Tất cả sản phẩm - LaptopSpace</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: { extend: { colors: { "primary": "#003f87", "surface-container-lowest": "#ffffff", "outline-variant": "#c2c6d4", "on-surface": "#191c1d", "on-surface-variant": "#424752", "surface-container-low": "#f3f4f5", "error": "#ba1a1a", "on-error": "#ffffff", "secondary": "#a33e00", "secondary-container": "#fe6500", "background": "#f8f9fa", "primary-fixed": "#d7e2ff" }, fontFamily: { "headline-md": ["Inter"], "body-md": ["Inter"], "headline-lg": ["Inter"], "price-lg": ["Inter"], "label-lg": ["Inter"], "headline-sm": ["Inter"], "body-sm": ["Inter"], "label-md": ["Inter"] } } }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .product-card-hover { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .product-card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15); }
+        .custom-radio:checked + div { border-color: #003f87; }
+        .custom-radio:checked + div::after { content: ''; display: block; width: 8px; height: 8px; background-color: #003f87; border-radius: 50%; }
+    </style>
+</head>
+<body class="bg-background text-on-surface flex flex-col min-h-screen">
+
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="max-w-container-max mx-auto px-4 md:px-12 py-12 flex flex-col lg:flex-row gap-8 flex-grow w-full">
+        <aside class="w-full lg:w-72 flex-shrink-0">
+            <div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant shadow-sm sticky top-28">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-outline-variant">
+                    <h2 class="font-headline-sm text-headline-sm flex items-center gap-2 text-on-surface font-bold">
+                        <span class="material-symbols-outlined text-primary">tune</span> Bộ lọc
+                    </h2>
+                    <a th:href="@{/shop}" class="text-primary text-sm hover:underline font-medium">Xóa lọc</a>
+                </div>
+
+                <form th:action="@{/shop}" method="GET" id="filterForm">
+                    
+                    <input type="hidden" name="keyword" th:value="${keyword}"/>
+                    
+                    <div class="mb-6 pb-4 border-b border-outline-variant/50">
+                        <h3 class="font-label-lg text-label-lg mb-4 uppercase tracking-wider text-on-surface font-bold">Danh mục</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative flex items-center justify-center">
+                                    <input type="radio" name="categoryId" value="" th:checked="${selectedCategoryId == null}" class="custom-radio opacity-0 absolute w-5 h-5 cursor-pointer"/>
+                                    <div class="w-5 h-5 rounded-full border-2 border-outline-variant group-hover:border-primary transition-colors flex items-center justify-center"></div>
+                                </div>
+                                <span class="text-sm font-medium" th:classappend="${selectedCategoryId == null ? 'text-primary' : 'text-on-surface-variant group-hover:text-primary'}">Tất cả Laptop</span>
+                            </label>
+                            <label th:each="cat : ${categories}" class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative flex items-center justify-center">
+                                    <input type="radio" name="categoryId" th:value="${cat.id}" th:checked="${selectedCategoryId == cat.id}" class="custom-radio opacity-0 absolute w-5 h-5 cursor-pointer"/>
+                                    <div class="w-5 h-5 rounded-full border-2 border-outline-variant group-hover:border-primary transition-colors flex items-center justify-center"></div>
+                                </div>
+                                <span class="text-sm transition-colors" th:classappend="${selectedCategoryId == cat.id ? 'font-medium text-primary' : 'text-on-surface-variant group-hover:text-primary'}" th:text="${cat.name}">Danh mục</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 pb-4 border-b border-outline-variant/50">
+                        <h3 class="font-label-lg text-label-lg mb-4 uppercase tracking-wider text-on-surface font-bold">Thương hiệu</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative flex items-center justify-center">
+                                    <input type="radio" name="brand" value="" th:checked="${selectedBrand == null or selectedBrand == ''}" class="custom-radio opacity-0 absolute w-5 h-5 cursor-pointer"/>
+                                    <div class="w-5 h-5 rounded-full border-2 border-outline-variant group-hover:border-primary flex items-center justify-center"></div>
+                                </div>
+                                <span class="text-sm font-medium" th:classappend="${selectedBrand == null or selectedBrand == '' ? 'text-primary' : 'text-on-surface-variant group-hover:text-primary'}">Tất cả hãng</span>
+                            </label>
+                            <label th:each="b : ${ {'Apple', 'ASUS', 'Dell', 'HP', 'Lenovo', 'MSI', 'Acer'} }" class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative flex items-center justify-center">
+                                    <input type="radio" name="brand" th:value="${b}" th:checked="${selectedBrand == b}" class="custom-radio opacity-0 absolute w-5 h-5 cursor-pointer"/>
+                                    <div class="w-5 h-5 rounded-full border-2 border-outline-variant group-hover:border-primary flex items-center justify-center"></div>
+                                </div>
+                                <span class="text-sm transition-colors text-on-surface-variant group-hover:text-primary" th:classappend="${selectedBrand == b ? 'font-medium text-primary' : ''}" th:text="${b}">Hãng</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 pb-4 border-b border-outline-variant/50">
+                        <h3 class="font-label-lg text-label-lg mb-4 uppercase tracking-wider text-on-surface font-bold">Khoảng giá</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative flex items-center justify-center">
+                                    <input type="radio" name="priceRange" value="" th:checked="${selectedPriceRange == null or selectedPriceRange == ''}" class="custom-radio opacity-0 absolute w-5 h-5 cursor-pointer"/>
+                                    <div class="w-5 h-5 rounded-full border-2 border-outline-variant group-hover:border-primary flex items-center justify-center"></div>
+                                </div>
+                                <span class="text-sm font-medium" th:classappend="${selectedPriceRange == null or selectedPriceRange == '' ? 'text-primary' : 'text-on-surface-variant'}">Tất cả mức giá</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative flex items-center justify-center">
+                                    <input type="radio" name="priceRange" value="0-15000000" th:checked="${selectedPriceRange == '0-15000000'}" class="custom-radio opacity-0 absolute w-5 h-5 cursor-pointer"/>
+                                    <div class="w-5 h-5 rounded-full border-2 border-outline-variant group-hover:border-primary flex items-center justify-center"></div>
+                                </div>
+                                <span class="text-sm font-medium text-on-surface-variant group-hover:text-primary" th:classappend="${selectedPriceRange == '0-15000000' ? 'text-primary' : ''}">Dưới 15 triệu</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative flex items-center justify-center">
+                                    <input type="radio" name="priceRange" value="15000000-25000000" th:checked="${selectedPriceRange == '15000000-25000000'}" class="custom-radio opacity-0 absolute w-5 h-5 cursor-pointer"/>
+                                    <div class="w-5 h-5 rounded-full border-2 border-outline-variant group-hover:border-primary flex items-center justify-center"></div>
+                                </div>
+                                <span class="text-sm font-medium text-on-surface-variant group-hover:text-primary" th:classappend="${selectedPriceRange == '15000000-25000000' ? 'text-primary' : ''}">Từ 15 - 25 triệu</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative flex items-center justify-center">
+                                    <input type="radio" name="priceRange" value="25000000-999999999" th:checked="${selectedPriceRange == '25000000-999999999'}" class="custom-radio opacity-0 absolute w-5 h-5 cursor-pointer"/>
+                                    <div class="w-5 h-5 rounded-full border-2 border-outline-variant group-hover:border-primary flex items-center justify-center"></div>
+                                </div>
+                                <span class="text-sm font-medium text-on-surface-variant group-hover:text-primary" th:classappend="${selectedPriceRange == '25000000-999999999' ? 'text-primary' : ''}">Trên 25 triệu</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-8 space-y-4">
+                        <div class="relative">
+                            <select name="ram" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 text-sm focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+                                <option value="">Dung lượng RAM: Tất cả</option>
+                                <option value="8GB" th:selected="${selectedRam == '8GB'}">8GB</option>
+                                <option value="16GB" th:selected="${selectedRam == '16GB'}">16GB</option>
+                                <option value="32GB" th:selected="${selectedRam == '32GB'}">32GB trở lên</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
+                        </div>
+                        <div class="relative">
+                            <select name="storage" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 text-sm focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+                                <option value="">Ổ cứng: Tất cả</option>
+                                <option value="256GB" th:selected="${selectedStorage == '256GB'}">256GB SSD</option>
+                                <option value="512GB" th:selected="${selectedStorage == '512GB'}">512GB SSD</option>
+                                <option value="1TB" th:selected="${selectedStorage == '1TB'}">1TB SSD trở lên</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-primary text-white py-3.5 rounded-xl font-bold hover:bg-blue-800 transition-all shadow-md active:scale-95 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">filter_alt</span> ÁP DỤNG LỌC
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <section class="flex-1 flex flex-col">
+            <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4 pb-4 border-b border-outline-variant/50">
+                <div>
+                    <h1 class="text-3xl font-black text-on-surface">Tất cả sản phẩm</h1>
+                    <p class="text-sm text-on-surface-variant mt-2 font-medium">Trang <span class="text-primary font-bold" th:text="${currentPage + 1}">1</span> / <span class="text-primary font-bold" th:text="${totalPages == 0 ? 1 : totalPages}">1</span></p>
+                </div>
+                <div class="flex items-center gap-3 bg-surface-container-lowest border border-outline-variant rounded-xl p-1.5 shadow-sm">
+                    <span class="text-sm font-semibold text-on-surface-variant pl-3">Sắp xếp:</span>
+                    <select name="sort" form="filterForm" onchange="document.getElementById('filterForm').submit()" class="bg-transparent border-none rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-0 cursor-pointer font-bold text-primary">
+                        <option value="newest" th:selected="${selectedSort == 'newest'}">Mới nhất</option>
+                        <option value="price_asc" th:selected="${selectedSort == 'price_asc'}">Giá thấp đến cao</option>
+                        <option value="price_desc" th:selected="${selectedSort == 'price_desc'}">Giá cao đến thấp</option>
+                    </select>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(laptops)}" class="bg-white p-12 rounded-2xl border border-outline-variant text-center my-8">
+                <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">search_off</span>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Không tìm thấy sản phẩm</h3>
+                <p class="text-gray-500">Hãy thử thay đổi điều kiện lọc xem sao nhé.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                <div th:each="laptop : ${laptops}" class="bg-surface-container-lowest rounded-2xl border border-outline-variant overflow-hidden product-card-hover group flex flex-col h-full relative">
+                    <div class="relative w-full aspect-[4/3] bg-white flex items-center justify-center p-6 border-b border-gray-100">
+                        <div th:if="${laptop.discountPrice != null}" class="absolute top-3 left-3 z-10">
+                            <span class="bg-error text-on-error font-bold text-[10px] px-3 py-1 rounded-full shadow-sm uppercase tracking-wide flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[12px]">bolt</span> Flash Sale
+                            </span>
+                        </div>
+                        <a th:href="@{/laptop/{id}(id=${laptop.id})}" class="block w-full h-full">
+                            <img th:src="${laptop.imageUrl}" th:alt="${laptop.name}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"/>
+                        </a>
+                    </div>
+                    
+                    <div class="p-5 flex flex-col flex-1 bg-white">
+                        <a th:href="@{/laptop/{id}(id=${laptop.id})}">
+                            <h3 class="text-sm text-on-surface line-clamp-2 group-hover:text-primary transition-colors font-bold mb-3" th:text="${laptop.name}">Laptop</h3>
+                        </a>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span th:if="${laptop.ram != null}" th:text="${laptop.ram}" class="bg-surface-container-low border border-outline-variant/50 px-2.5 py-1 rounded-md text-[11px] font-semibold text-gray-600">RAM</span>
+                            <span th:if="${laptop.storage != null}" th:text="${laptop.storage}" class="bg-surface-container-low border border-outline-variant/50 px-2.5 py-1 rounded-md text-[11px] font-semibold text-gray-600">SSD</span>
+                        </div>
+                        <div class="mt-auto flex flex-col gap-1 mb-5">
+                            <span class="text-xs text-outline line-through font-medium" th:if="${laptop.discountPrice != null}" th:text="${#numbers.formatInteger(laptop.price, 3, 'POINT')} + 'đ'"></span>
+                            <span class="text-xs text-outline opacity-0" th:unless="${laptop.discountPrice != null}">-</span>
+                            <span class="text-secondary text-xl font-black" th:text="${laptop.discountPrice != null ? #numbers.formatInteger(laptop.discountPrice, 3, 'POINT') : #numbers.formatInteger(laptop.price, 3, 'POINT')} + 'đ'"></span>
+							<button th:onclick="'addLaptopToCompare(' + ${laptop.id} + ')'" 
+							        class="text-xs font-bold text-gray-500 hover:text-[#003f87] flex items-center gap-1 mt-2">
+									<span class="material-symbols-outlined text-[26px]">compare_arrows</span> 
+									<span class="text-[20px]">So sánh</span>
+							</button>
+						</div>
+						
+                        <div class="flex items-center gap-3">
+                            <a th:href="@{/cart/add/{id}(id=${laptop.id})}" class="w-11 h-11 rounded-xl bg-primary-fixed/50 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all shrink-0">
+                                <span class="material-symbols-outlined">add_shopping_cart</span>
+                            </a>
+                            <a th:href="@{/cart/buynow/{id}(id=${laptop.id})}" class="flex-1 bg-white border-2 border-primary text-primary py-2.5 rounded-xl text-center font-bold text-sm hover:bg-primary hover:text-white transition-all">
+                                Mua ngay
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${totalPages > 1}" class="mt-auto pt-8 flex justify-center items-center gap-2 border-t border-outline-variant/50">
+                <a th:if="${currentPage > 0}" th:href="@{/shop(keyword=${keyword}, categoryId=${selectedCategoryId}, priceRange=${selectedPriceRange}, brand=${selectedBrand}, ram=${selectedRam}, storage=${selectedStorage}, sort=${selectedSort}, page=${currentPage - 1})}" class="w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant text-gray-500 hover:bg-gray-100 transition">
+                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                </a>
+                
+                <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                   th:href="@{/shop(keyword=${keyword}, categoryId=${selectedCategoryId}, priceRange=${selectedPriceRange}, brand=${selectedBrand}, ram=${selectedRam}, storage=${selectedStorage}, sort=${selectedSort}, page=${i})}"
+                   th:text="${i + 1}"
+                   th:classappend="${i == currentPage ? 'bg-primary text-white font-bold shadow-md' : 'border border-outline-variant text-gray-600 hover:bg-gray-50'}"
+                   class="w-10 h-10 flex items-center justify-center rounded-xl transition">1</a>
+
+                <a th:if="${currentPage < totalPages - 1}" th:href="@{/shop(keyword=${keyword}, categoryId=${selectedCategoryId}, priceRange=${selectedPriceRange}, brand=${selectedBrand}, ram=${selectedRam}, storage=${selectedStorage}, sort=${selectedSort}, page=${currentPage + 1})}" class="w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant text-gray-500 hover:bg-gray-100 transition">
+                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

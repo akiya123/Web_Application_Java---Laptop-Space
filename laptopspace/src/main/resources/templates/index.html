@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LaptopSpace - E-commerce Homepage</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+		<link rel="icon" href="laptopspace/uploads/laptops/1781164843307_1767_dell_precision_7550_laptopg7_03.jpg" type="image/jpg">
+
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#d7e2ff", "background": "#f8f9fa", "error-container": "#ffdad6",
+                        "surface-variant": "#e1e3e4", "on-surface": "#191c1d", "on-tertiary-container": "#ffc2a7",
+                        "secondary": "#a33e00", "surface-container": "#edeeef", "inverse-primary": "#acc7ff",
+                        "on-primary": "#ffffff", "surface-container-low": "#f3f4f5", "inverse-on-surface": "#f0f1f2",
+                        "on-secondary-fixed": "#360f00", "on-secondary-container": "#541d00", "inverse-surface": "#2e3132",
+                        "surface": "#f8f9fa", "on-primary-container": "#bbd0ff", "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff", "surface-container-high": "#e7e8e9", "primary-container": "#0056b3",
+                        "outline": "#727784", "tertiary-container": "#983c00", "on-secondary-fixed-variant": "#7c2e00",
+                        "secondary-container": "#fe6500", "on-tertiary-fixed": "#351000", "primary": "#003f87",
+                        "on-background": "#191c1d", "on-tertiary-fixed-variant": "#7b2f00", "surface-dim": "#d9dadb",
+                        "surface-container-lowest": "#ffffff", "secondary-fixed": "#ffdbcd", "surface-bright": "#f8f9fa",
+                        "tertiary-fixed-dim": "#ffb694", "on-error": "#ffffff", "tertiary-fixed": "#ffdbcc",
+                        "primary-fixed-dim": "#acc7ff", "surface-container-highest": "#e1e3e4", "on-surface-variant": "#424752",
+                        "outline-variant": "#c2c6d4", "on-primary-fixed": "#001a40", "error": "#ba1a1a",
+                        "surface-tint": "#115cb9", "tertiary": "#722b00", "on-primary-fixed-variant": "#004491",
+                        "secondary-fixed-dim": "#ffb596", "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                    "spacing": { "stack-xl": "48px", "stack-lg": "24px", "stack-xs": "4px", "gutter": "24px", "margin-desktop": "48px", "stack-md": "16px", "stack-sm": "8px", "margin-mobile": "16px", "container-max": "1240px" },
+                    "fontFamily": { "body-lg": ["Inter"], "body-sm": ["Inter"], "headline-md": ["Inter"], "label-lg": ["Inter"], "headline-lg-mobile": ["Inter"], "label-md": ["Inter"], "headline-sm": ["Inter"], "body-md": ["Inter"], "headline-lg": ["Inter"], "price-lg": ["Inter"], "display-lg": ["Inter"] }
+                }
+            }
+        }
+    </script>
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-surface text-on-surface flex flex-col min-h-screen">
+
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="flex-grow w-full">
+		<section class="w-full bg-surface-container-low mb-stack-xl relative overflow-hidden">
+		    <div class="max-w-[1360px] mx-auto px-2 md:px-4 py-stack-lg group">
+		        <div class="relative rounded-xl overflow-hidden shadow-sm aspect-[21/9] md:aspect-[21/8] bg-surface-variant">
+		            
+		            <div class="flex w-full h-full transition-transform duration-500 ease-in-out" id="banner-slider">
+		                <div class="w-full h-full flex-shrink-0 relative">
+		                    <img alt="Workspace setup" class="absolute inset-0 w-full h-full object-cover" src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1360&q=80&fit=crop"/>
+		                </div>
+		                <div class="w-full h-full flex-shrink-0 relative">
+		                    <img alt="Premium laptop design" class="absolute inset-0 w-full h-full object-cover" src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1360&q=80&fit=crop"/>
+		                </div>
+		                <div class="w-full h-full flex-shrink-0 relative">
+		                    <img alt="Gaming laptop power" class="absolute inset-0 w-full h-full object-cover" src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=1360&q=80&fit=crop"/>
+		                </div>
+		                <div class="w-full h-full flex-shrink-0 relative">
+		                    <img alt="Neon gaming setup" class="absolute inset-0 w-full h-full object-cover" src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=1240&auto=format&fit=crop"/>
+		                </div>
+		                <div class="w-full h-full flex-shrink-0 relative">
+		                    <img alt="Minimalist desk" class="absolute inset-0 w-full h-full object-cover" src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1360&q=80&fit=crop"/>
+		                </div>
+		            </div>
+
+		            <button aria-label="Previous slide" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-surface/80 hover:bg-surface text-on-surface rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md z-10" id="slider-prev">
+		                <span class="material-symbols-outlined">chevron_left</span>
+		            </button>
+		            <button aria-label="Next slide" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-surface/80 hover:bg-surface text-on-surface rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md z-10" id="slider-next">
+		                <span class="material-symbols-outlined">chevron_right</span>
+		            </button>
+
+		            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10" id="slider-dots">
+		                <button aria-label="Go to slide 1" class="w-2.5 h-2.5 rounded-full bg-primary transition-colors dot-btn" data-index="0"></button>
+		                <button aria-label="Go to slide 2" class="w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white/80 transition-colors dot-btn" data-index="1"></button>
+		                <button aria-label="Go to slide 3" class="w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white/80 transition-colors dot-btn" data-index="2"></button>
+		                <button aria-label="Go to slide 4" class="w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white/80 transition-colors dot-btn" data-index="3"></button>
+		                <button aria-label="Go to slide 5" class="w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white/80 transition-colors dot-btn" data-index="4"></button>
+		            </div>
+		        </div>
+		    </div>
+		</section>
+
+		<section class="max-w-[1240px] mx-auto px-4 md:px-12 mb-12 w-full">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <a th:href="@{/shop(categoryId=1)}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-300 rounded-xl hover:shadow-md hover:border-[#003f87] transition-all group">
+                    <div class="w-16 h-16 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-[32px]">sports_esports</span>
+                    </div>
+                    <span class="font-bold text-sm text-center">Laptop Gaming</span>
+                </a>
+                
+                <a th:href="@{/shop(categoryId=2)}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-300 rounded-xl hover:shadow-md hover:border-[#003f87] transition-all group">
+                    <div class="w-16 h-16 rounded-full bg-gray-100 text-gray-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-[32px]">laptop_mac</span>
+                    </div>
+                    <span class="font-bold text-sm text-center">MacBook</span>
+                </a>
+                
+                <a th:href="@{/shop(categoryId=3)}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-300 rounded-xl hover:shadow-md hover:border-[#003f87] transition-all group">
+                    <div class="w-16 h-16 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-[32px]">work</span>
+                    </div>
+                    <span class="font-bold text-sm text-center">Laptop Văn Phòng</span>
+                </a>
+                
+                <a th:href="@{/shop(categoryId=4)}" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-300 rounded-xl hover:shadow-md hover:border-[#003f87] transition-all group">
+                    <div class="w-16 h-16 rounded-full bg-red-100 text-red-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-[32px]">brush</span>
+                    </div>
+                    <span class="font-bold text-sm text-center">Laptop Đồ Họa</span>
+                </a>
+            </div>
+		</section>
+
+        <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-stack-xl">
+			<div class="flex justify-between items-end mb-6 mt-12 border-b border-gray-200 pb-2">
+	            <h2 class="text-2xl md:text-3xl font-black text-[#003f87]" th:text="${sectionTitle != null ? sectionTitle : 'Khuyến Mãi Hot'}">Khuyến Mãi Hot</h2>
+	            
+	            <a th:href="@{/shop}" class="text-sm font-bold text-blue-500 hover:text-[#fe6500] flex items-center gap-1 transition-colors mb-1">
+	                Xem tất cả <span class="material-symbols-outlined text-[16px]">arrow_forward_ios</span>
+	            </a>
+			</div>
+            
+            <div th:if="${#lists.isEmpty(laptops)}" class="text-center py-16 bg-white rounded-xl border border-gray-200">
+                <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">search_off</span>
+                <h3 class="text-xl font-bold text-gray-700">Không tìm thấy sản phẩm nào!</h3>
+                <p class="text-gray-500 mt-2">Vui lòng thử lại với từ khóa hoặc danh mục khác.</p>
+                <a th:href="@{/}" class="inline-block mt-6 px-6 py-2 bg-[#003f87] text-white rounded-lg hover:bg-blue-800">Quay lại trang chủ</a>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(laptops)}" class="grid grid-cols-2 md:grid-cols-4 gap-stack-md md:gap-gutter">
+                
+                <div th:each="laptop : ${laptops}" class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden hover:shadow-lg transition-all group flex flex-col relative">
+                    
+                    <div th:if="${laptop.discountPrice != null}" class="absolute top-2 left-2 bg-error text-on-error font-bold text-xs px-2 py-1 rounded z-10">Sale</div>
+                    
+                    <a th:href="@{/laptop/{id}(id=${laptop.id})}" class="aspect-square bg-white p-4 flex items-center justify-center relative overflow-hidden block border-b border-gray-100">
+                        <img th:src="${laptop.imageUrl}" th:alt="${laptop.name}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"/>
+                    </a>
+                    
+                    <div class="p-4 flex flex-col flex-1 bg-white">
+                        <a th:href="@{/laptop/{id}(id=${laptop.id})}" class="hover:text-primary transition-colors flex-1 block">
+                            <h3 th:text="${laptop.name}" class="font-bold text-sm text-[#191c1d] line-clamp-2 mb-2">Tên sản phẩm</h3>
+                        </a>
+                        
+                        <div class="flex flex-col gap-1 mb-4">
+                            <span th:text="${laptop.discountPrice != null ? #numbers.formatInteger(laptop.discountPrice, 3, 'POINT') : #numbers.formatInteger(laptop.price, 3, 'POINT')} + ' ₫'" class="font-black text-lg text-[#ba1a1a]">0 ₫</span>
+                            <span th:if="${laptop.discountPrice != null}" th:text="${#numbers.formatInteger(laptop.price, 3, 'POINT')} + ' ₫'" class="font-medium text-xs text-gray-500 line-through">0 ₫</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-2 mt-auto opacity-100 md:opacity-0 md:group-hover:opacity-100 md:translate-y-2 md:group-hover:translate-y-0 transition-all duration-200">
+                            <a th:href="@{/cart/add/{id}(id=${laptop.id})}" class="w-full py-2 border-2 border-[#003f87] text-[#003f87] font-bold text-xs rounded hover:bg-[#d7e2ff] transition-colors flex items-center justify-center gap-1">
+                                <span class="material-symbols-outlined text-[16px]">add_shopping_cart</span> Giỏ
+                            </a>
+							<a th:href="@{/cart/buynow/{id}(id=${laptop.id})}" class="w-full py-2 bg-[#fe6500] text-white font-bold text-xs rounded hover:bg-[#a33e00] transition-colors flex items-center justify-center">
+							    Mua ngay
+							</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+	
+	<script>
+	    document.addEventListener('DOMContentLoaded', function() {
+	        const slider = document.getElementById('banner-slider');
+	        const prevBtn = document.getElementById('slider-prev');
+	        const nextBtn = document.getElementById('slider-next');
+	        const dots = document.querySelectorAll('.dot-btn');
+
+	        if (slider) {
+	            const totalSlides = slider.children.length;
+	            let currentSlide = 0;
+	            let slideInterval;
+
+	            const updateDots = (index) => {
+	                dots.forEach((dot, i) => {
+	                    if (i === index) {
+	                        dot.classList.remove('bg-white/50', 'hover:bg-white/80');
+	                        dot.classList.add('bg-primary'); 
+	                    } else {
+	                        dot.classList.remove('bg-primary');
+	                        dot.classList.add('bg-white/50', 'hover:bg-white/80'); 
+	                    }
+	                });
+	            };
+
+	            const goToSlide = (index) => {
+	                currentSlide = (index + totalSlides) % totalSlides; 
+	                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+	                updateDots(currentSlide);
+	            };
+
+	            const startSlide = () => {
+	                slideInterval = setInterval(() => {
+	                    goToSlide(currentSlide + 1);
+	                }, 4000); 
+	            };
+
+	            const resetInterval = () => {
+	                clearInterval(slideInterval);
+	                startSlide();
+	            };
+
+	            if (nextBtn) {
+	                nextBtn.addEventListener('click', () => {
+	                    goToSlide(currentSlide + 1);
+	                    resetInterval();
+	                });
+	            }
+
+	            if (prevBtn) {
+	                prevBtn.addEventListener('click', () => {
+	                    goToSlide(currentSlide - 1);
+	                    resetInterval();
+	                });
+	            }
+
+	            dots.forEach((dot, index) => {
+	                dot.addEventListener('click', () => {
+	                    goToSlide(index);
+	                    resetInterval();
+	                });
+	            });
+
+	            startSlide();
+	        }
+	    });
+	</script>
+
+</body>
+</html>

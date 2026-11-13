@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết Khách hàng - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden text-gray-800">
+
+    <div th:replace="~{admin/fragments/sidebar :: sidebar('users')}"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0 shadow-sm">
+            <div class="flex items-center gap-4">
+                <a th:href="@{/admin/users}" class="text-gray-500 hover:text-[#003f87] transition flex items-center">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <h1 class="text-xl font-bold text-gray-800">Hồ sơ Khách hàng</h1>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                
+                <div class="bg-[#001a40] h-32 relative">
+                    <div class="absolute -bottom-12 left-8 w-24 h-24 bg-white rounded-full border-4 border-white flex items-center justify-center text-[#003f87] shadow-md">
+                        <span class="material-symbols-outlined text-5xl">person</span>
+                    </div>
+                </div>
+
+                <div class="pt-16 pb-8 px-8">
+                    <div class="flex justify-between items-start mb-8">
+                        <div>
+                            <h2 class="text-2xl font-black text-gray-900" th:text="${user.fullName}">Tên Khách Hàng</h2>
+                            <p class="text-gray-500 font-medium" th:text="${user.role}">ROLE_USER</p>
+                        </div>
+                        <div class="text-right">
+                            <span th:if="${user.enabled}" class="inline-flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-bold">
+                                <span class="material-symbols-outlined text-[16px]">check_circle</span> Đang hoạt động
+                            </span>
+                            <span th:unless="${user.enabled}" class="inline-flex items-center gap-1 bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-bold">
+                                <span class="material-symbols-outlined text-[16px]">block</span> Bị khóa
+                            </span>
+                        </div>
+                    </div>
+
+                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 border-b pb-2">Thông tin liên hệ</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#003f87] shrink-0">
+                                <span class="material-symbols-outlined">mail</span>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 font-semibold mb-0.5">Địa chỉ Email</p>
+                                <p class="text-gray-800 font-medium" th:text="${user.email}">email@domain.com</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 shrink-0">
+                                <span class="material-symbols-outlined">call</span>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 font-semibold mb-0.5">Số điện thoại</p>
+                                <p class="text-gray-800 font-medium" th:text="${user.phone != null and !user.phone.isEmpty() ? user.phone : 'Chưa cập nhật'}">090xxxxxxx</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 md:col-span-2">
+                            <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600 shrink-0">
+                                <span class="material-symbols-outlined">location_on</span>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 font-semibold mb-0.5">Địa chỉ nhận hàng</p>
+                                <p class="text-gray-800 font-medium" th:text="${user.address != null and !user.address.isEmpty() ? user.address : 'Chưa cập nhật'}">Hà Nội...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

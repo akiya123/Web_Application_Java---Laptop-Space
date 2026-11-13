@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>So sánh Laptop - LaptopSpace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; } </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="max-w-[1240px] mx-auto px-4 py-8 flex-grow w-full">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-2xl font-black text-gray-800">So sánh sản phẩm chi tiết</h1>
+            <button onclick="clearCompare()" class="text-red-500 hover:text-red-700 font-bold text-sm flex items-center gap-1">
+                <span class="material-symbols-outlined text-[18px]">delete</span> Xóa danh sách so sánh
+            </button>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="grid grid-cols-4 min-w-[800px] overflow-x-auto">
+                
+                <div class="bg-gray-50 border-r border-gray-200 p-4">
+                    <div class="h-64 mb-4"></div> <div class="space-y-0 text-sm font-bold text-gray-600">
+                        <div class="py-4 border-b border-gray-200">Giá bán</div>
+                        <div class="py-4 border-b border-gray-200">CPU</div>
+                        <div class="py-4 border-b border-gray-200">RAM</div>
+                        <div class="py-4 border-b border-gray-200">Ổ cứng</div>
+                        <div class="py-4 border-b border-gray-200">Card VGA</div>
+                        <div class="py-4 border-b border-gray-200">Màn hình</div>
+                        <div class="py-4 border-b border-gray-200">Pin</div>
+                        <div class="py-4">Trọng lượng</div>
+                    </div>
+                </div>
+
+                <div th:each="laptop, stat : ${ {laptop1, laptop2, laptop3} }" class="border-r border-gray-200 last:border-r-0 p-4 relative group">
+                    
+                    <div th:if="${laptop != null}">
+                        <button th:onclick="'removeItem(' + ${stat.index + 1} + ')'" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center transition">
+                            <span class="material-symbols-outlined text-[18px]">close</span>
+                        </button>
+
+                        <div class="h-64 flex flex-col items-center justify-end mb-4 text-center">
+                            <img th:src="${laptop.imageUrl}" class="w-40 h-40 object-contain mb-4">
+                            <a th:href="@{/laptop/{id}(id=${laptop.id})}" class="font-bold text-[#003f87] hover:underline text-sm h-10 line-clamp-2" th:text="${laptop.name}">Tên SP</a>
+                            <a th:href="@{/cart/add/{id}(id=${laptop.id})}" class="mt-2 w-full py-2 bg-[#fe6500] text-white font-bold text-sm rounded-lg hover:bg-[#e65a00] transition">Thêm vào giỏ</a>
+                        </div>
+
+                        <div class="space-y-0 text-sm text-gray-800">
+                            <div class="py-4 border-b border-gray-200 font-bold text-red-600" th:text="${laptop.discountPrice != null ? #numbers.formatInteger(laptop.discountPrice, 3, 'POINT') : #numbers.formatInteger(laptop.price, 3, 'POINT')} + ' ₫'"></div>
+                            <div class="py-4 border-b border-gray-200" th:text="${laptop.cpu != null ? laptop.cpu : '-'}"></div>
+                            <div class="py-4 border-b border-gray-200" th:text="${laptop.ram != null ? laptop.ram : '-'}"></div>
+                            <div class="py-4 border-b border-gray-200" th:text="${laptop.storage != null ? laptop.storage : '-'}"></div>
+                            <div class="py-4 border-b border-gray-200" th:text="${laptop.vga != null ? laptop.vga : '-'}"></div>
+                            <div class="py-4 border-b border-gray-200" th:text="${laptop.screen != null ? laptop.screen : '-'}"></div>
+                            <div class="py-4 border-b border-gray-200" th:text="${laptop.battery != null ? laptop.battery : '-'}"></div>
+                            <div class="py-4" th:text="${laptop.weight != null ? laptop.weight : '-'}"></div>
+                        </div>
+                    </div>
+
+                    <div th:unless="${laptop != null}" class="h-full flex flex-col items-center justify-center opacity-50">
+                        <div class="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mb-4 border-2 border-dashed border-gray-300">
+                            <span class="material-symbols-outlined text-4xl text-gray-400">laptop_mac</span>
+                        </div>
+                        <p class="text-sm font-bold text-gray-500 mb-2">Chưa có sản phẩm</p>
+                        <a th:href="@{/}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-bold text-gray-600 hover:text-[#003f87] hover:border-[#003f87] transition">Thêm máy</a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        // Xóa sạch danh sách
+        function clearCompare() {
+            localStorage.removeItem('compareList');
+            window.location.href = '/compare';
+        }
+
+        // Xóa 1 máy cụ thể (Theo thứ tự 1, 2, 3)
+        function removeItem(index) {
+            let list = JSON.parse(localStorage.getItem('compareList')) || [];
+            if(list.length >= index) {
+                list.splice(index - 1, 1); // Xóa đúng vị trí đó
+                localStorage.setItem('compareList', JSON.stringify(list));
+                
+                // Build lại link và load lại trang
+                let url = '/compare?';
+                list.forEach((id, i) => { url += `id${i+1}=${id}&`; });
+                window.location.href = url;
+            }
+        }
+    </script>
+</body>
+</html>

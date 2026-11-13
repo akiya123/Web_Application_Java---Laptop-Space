@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Đơn hàng - LaptopSpace Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden text-gray-800">
+
+	<div th:replace="~{admin/fragments/sidebar :: sidebar('orders')}"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        
+        <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+            <h1 class="text-xl font-bold text-gray-800">Danh sách Đơn hàng</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-medium text-gray-600">Admin Panel</span>
+                <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                    <span class="material-symbols-outlined text-gray-500">shield_person</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-600 text-sm uppercase tracking-wide border-b border-gray-200">
+                                <th class="p-4 font-semibold">Mã ĐH</th>
+                                <th class="p-4 font-semibold">Ngày đặt</th>
+                                <th class="p-4 font-semibold">Khách hàng</th>
+                                <th class="p-4 font-semibold">Tổng tiền</th>
+                                <th class="p-4 font-semibold">Trạng thái</th>
+                                <th class="p-4 font-semibold text-right">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr th:each="order : ${orders}" class="border-b border-gray-100 hover:bg-gray-50 transition">
+                                <td class="p-4 font-bold text-gray-700" th:text="'#' + ${order.id}">#1</td>
+                                <td class="p-4 text-gray-500" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm') : ''}">01/01/2026</td>
+                                <td class="p-4">
+                                    <div class="font-semibold text-gray-800" th:text="${order.customerName}">Tên KH</div>
+                                    <div class="text-gray-500 text-xs mt-0.5" th:text="${order.customerPhone}">090...</div>
+                                </td>
+                                <td class="p-4 font-bold text-[#fe6500]" th:text="${#numbers.formatInteger(order.totalAmount, 3, 'POINT')} + ' ₫'">0₫</td>
+                                
+                                <td class="p-4">
+                                    <form th:if="${order.status != 'Đã hủy' and order.status != 'ĐÃ HỦY' and order.status != 'Hoàn thành' and order.status != 'HOÀN THÀNH'}" 
+                                          th:action="@{/admin/orders/update-status/{id}(id=${order.id})}" method="POST" class="m-0">
+                                        <select name="status" class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm bg-white focus:ring-[#003f87] focus:border-[#003f87] outline-none font-medium text-gray-700" onchange="this.form.submit()">
+                                            <option value="Chờ xác nhận" th:selected="${order.status == 'Chờ xác nhận' or order.status == 'CHỜ XÁC NHẬN'}">Chờ xác nhận</option>
+                                            <option value="Đang giao" th:selected="${order.status == 'Đang giao' or order.status == 'ĐANG GIAO'}">Đang giao</option>
+                                            <option value="Hoàn thành" th:selected="${order.status == 'Hoàn thành' or order.status == 'HOÀN THÀNH'}">Hoàn thành</option>
+                                            <option value="Đã hủy" th:selected="${order.status == 'Đã hủy' or order.status == 'ĐÃ HỦY'}">Đã hủy</option>
+                                        </select>
+                                    </form>
+                                    
+                                    <div th:if="${order.status == 'Đã hủy' or order.status == 'ĐÃ HỦY'}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 bg-red-50 text-red-600 font-bold text-xs">
+                                        <span class="material-symbols-outlined text-[16px]">lock</span> Đã hủy
+                                    </div>
+
+                                    <div th:if="${order.status == 'Hoàn thành' or order.status == 'HOÀN THÀNH'}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-green-200 bg-green-50 text-green-700 font-bold text-xs">
+                                        <span class="material-symbols-outlined text-[16px]">lock</span> Hoàn thành
+                                    </div>
+                                </td>
+                                
+                                <td class="p-4 text-right">
+                                    <a th:href="@{/admin/orders/{id}(id=${order.id})}" class="inline-flex items-center gap-1 px-4 py-2 bg-blue-50 text-[#003f87] hover:bg-[#003f87] hover:text-white rounded-lg font-bold transition-colors">
+                                        <span class="material-symbols-outlined text-[18px]">visibility</span> Xem
+                                    </a>
+                                </td>
+                            </tr>
+                            
+                            <tr th:if="${#lists.isEmpty(orders)}">
+                                <td colspan="6" class="p-8 text-center text-gray-500 font-medium">Chưa có đơn hàng nào trong hệ thống.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

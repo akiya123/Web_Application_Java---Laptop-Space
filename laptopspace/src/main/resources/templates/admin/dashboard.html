@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thống kê Tổng quan - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden text-gray-800">
+
+    <div th:replace="~{admin/fragments/sidebar :: sidebar('dashboard')}"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0 shadow-sm">
+            <h1 class="text-xl font-bold text-gray-800">Tổng quan Hệ thống</h1>
+            <div class="flex items-center gap-3">
+                <span class="w-10 h-10 rounded-full bg-[#003f87] text-white flex items-center justify-center font-bold">A</span>
+                <div>
+                    <p class="text-sm font-bold text-gray-800">Admin</p>
+                    <p class="text-xs text-green-600 font-medium flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Đang hoạt động</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center text-green-600 shrink-0">
+                        <span class="material-symbols-outlined text-3xl">payments</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-semibold mb-1">Tổng Doanh Thu</p>
+                        <h3 class="text-2xl font-black text-gray-800" th:text="${#numbers.formatInteger(totalRevenue, 3, 'POINT')} + ' ₫'">0 ₫</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center text-[#003f87] shrink-0">
+                        <span class="material-symbols-outlined text-3xl">shopping_cart</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-semibold mb-1">Tổng Đơn Hàng</p>
+                        <h3 class="text-2xl font-black text-gray-800" th:text="${totalOrders}">0</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-orange-50 flex items-center justify-center text-[#fe6500] shrink-0">
+                        <span class="material-symbols-outlined text-3xl">laptop_mac</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-semibold mb-1">Laptop Đang Bán</p>
+                        <h3 class="text-2xl font-black text-gray-800" th:text="${totalLaptops}">0</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-purple-50 flex items-center justify-center text-purple-600 shrink-0">
+                        <span class="material-symbols-outlined text-3xl">group</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-semibold mb-1">Tổng Khách Hàng</p>
+                        <h3 class="text-2xl font-black text-gray-800" th:text="${totalUsers}">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                    <h2 class="font-bold text-gray-800 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#003f87]">schedule</span> Đơn hàng cần xử lý gần đây
+                    </h2>
+                    <a th:href="@{/admin/orders}" class="text-sm font-semibold text-[#003f87] hover:underline">Xem tất cả &rarr;</a>
+                </div>
+                
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-gray-500 text-xs uppercase tracking-wide border-b border-gray-200">
+                            <th class="p-4 font-semibold">Mã ĐH</th>
+                            <th class="p-4 font-semibold">Khách hàng</th>
+                            <th class="p-4 font-semibold">Thời gian đặt</th>
+                            <th class="p-4 font-semibold">Tổng tiền</th>
+                            <th class="p-4 font-semibold text-center">Trạng thái</th>
+                            <th class="p-4 font-semibold text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr th:each="order : ${recentOrders}" class="border-b border-gray-100 hover:bg-gray-50 transition">
+                            <td class="p-4 font-bold text-gray-700" th:text="'#' + ${order.id}">#1</td>
+                            <td class="p-4 font-semibold text-[#003f87]" th:text="${order.customerName}">Tên Khách</td>
+                            <td class="p-4 text-gray-500 font-medium" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm') : ''}">12/06</td>
+                            <td class="p-4 font-bold text-red-600" th:text="${#numbers.formatInteger(order.totalAmount, 3, 'POINT')} + ' ₫'">0₫</td>
+                            <td class="p-4 text-center">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold border"
+                                      th:classappend="${order.status == 'Chờ xác nhận' or order.status == 'CHỜ XÁC NHẬN' ? 'bg-blue-50 text-blue-700 border-blue-200' : 
+                                                       (order.status == 'Hoàn thành' or order.status == 'HOÀN THÀNH' ? 'bg-green-50 text-green-700 border-green-200' : 
+                                                       (order.status == 'Đã hủy' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-orange-50 text-orange-700 border-orange-200'))}"
+                                      th:text="${order.status}">
+                                    Trạng thái
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <a th:href="@{/admin/orders/{id}(id=${order.id})}" class="text-[#003f87] hover:underline font-semibold text-sm">Xử lý ngay</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(recentOrders)}">
+                            <td colspan="6" class="p-8 text-center text-gray-500 font-medium">Chưa có đơn hàng nào trong hệ thống.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Khách hàng - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden text-gray-800">
+
+    <div th:replace="~{admin/fragments/sidebar :: sidebar('users')}"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0 shadow-sm">
+            <h1 class="text-xl font-bold text-gray-800">Quản lý Khách hàng</h1>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 text-sm uppercase tracking-wide border-b border-gray-200">
+                            <th class="p-4 font-semibold w-16">ID</th>
+                            <th class="p-4 font-semibold">Khách hàng</th>
+                            <th class="p-4 font-semibold">Quyền hạn</th>
+                            <th class="p-4 font-semibold text-center">Trạng thái</th>
+                            <th class="p-4 font-semibold text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+					<tbody class="text-sm">
+					    <tr th:each="u : ${users}" class="border-b border-gray-100 hover:bg-gray-50 transition">
+					        <td class="p-4 text-gray-500 font-medium" th:text="${u.id}">1</td>
+					        
+					        <td class="p-4">
+					            <div class="font-bold text-gray-800" th:text="${u.fullName}">Tên user</div>
+					            <div class="text-xs text-gray-500 mt-1" th:text="${u.email}">email@domain.com</div>
+					        </td>
+					        
+					        <td class="p-4 text-gray-600 font-medium">
+					            <span class="inline-block bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-bold border border-blue-200" th:text="${u.role}">ROLE_USER</span>
+					        </td>
+					        
+					        <td class="p-4 text-center">
+					            <span th:if="${u.enabled}" class="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">Hoạt động</span>
+					            <span th:unless="${u.enabled}" class="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold">Bị khóa</span>
+					        </td>
+					        
+							<td class="p-4 text-right space-x-3">
+							    <a th:href="@{/admin/users/{id}(id=${u.id})}" class="text-[#003f87] hover:text-blue-800 font-medium hover:underline inline-flex items-center gap-1">
+							        <span class="material-symbols-outlined text-[18px]">visibility</span> Xem
+							    </a>
+							    
+							    <a th:if="${u.email != 'admin@laptopspace.com'}" 
+							       th:href="@{/admin/users/toggle-lock/{id}(id=${u.id})}" 
+							       th:class="${u.enabled ? 'text-red-600 hover:text-red-800' : 'text-green-600 hover:text-green-800'}"
+							       class="font-medium hover:underline inline-flex items-center gap-1"
+							       th:onclick="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái tài khoản này?');">
+							        <span class="material-symbols-outlined text-[18px]" th:text="${u.enabled ? 'lock' : 'lock_open'}">lock</span>
+							        <span th:text="${u.enabled ? 'Khóa TK' : 'Mở khóa'}">Khóa</span>
+							    </a>
+							</td>
+					    </tr>
+					</tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

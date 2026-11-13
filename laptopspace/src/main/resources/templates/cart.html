@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Giỏ hàng - LaptopSpace</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#003f87", "on-primary": "#ffffff", "primary-container": "#0056b3",
+                        "secondary": "#a33e00", "on-secondary": "#ffffff", "secondary-container": "#fe6500",
+                        "error": "#ba1a1a", "on-error": "#ffffff", "error-container": "#ffdad6",
+                        "background": "#f8f9fa", "on-background": "#191c1d",
+                        "surface": "#f8f9fa", "on-surface": "#191c1d", "on-surface-variant": "#424752",
+                        "surface-container-lowest": "#ffffff", "surface-container-low": "#f3f4f5",
+                        "surface-container": "#edeeef", "surface-container-high": "#e7e8e9",
+                        "outline": "#727784", "outline-variant": "#c2c6d4"
+                    },
+                    "spacing": { "stack-xl": "48px", "stack-lg": "24px", "stack-md": "16px", "stack-sm": "8px", "stack-xs": "4px", "margin-desktop": "48px", "margin-mobile": "16px", "gutter": "24px", "container-max": "1240px" },
+                    "fontFamily": { "body-md": ["Inter"], "headline-lg": ["Inter"], "label-lg": ["Inter"], "body-sm": ["Inter"], "label-md": ["Inter"], "price-lg": ["Inter"], "headline-md": ["Inter"], "headline-sm": ["Inter"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .product-card-hover:hover { box-shadow: 0px 4px 12px rgba(0,0,0,0.08); }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex flex-col min-h-screen">
+
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-xl flex-grow w-full">
+        <h1 class="font-headline-lg text-headline-lg mb-stack-lg">Giỏ hàng của bạn</h1>
+        
+        <div th:if="${#lists.isEmpty(cartItems)}" class="text-center bg-surface-container-lowest p-12 rounded-xl border border-outline-variant shadow-sm">
+            <span class="material-symbols-outlined text-6xl text-outline mb-4">shopping_cart</span>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface mb-2">Giỏ hàng đang trống</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-6">Hãy quay lại trang chủ và chọn cho mình những sản phẩm ưng ý nhé.</p>
+            <a th:href="@{/}" class="bg-primary text-on-primary px-6 py-3 rounded-lg font-label-lg text-label-lg hover:bg-primary-container transition">Tiếp tục mua sắm</a>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(cartItems)}" class="flex flex-col lg:flex-row gap-gutter">
+            <div class="flex-grow space-y-stack-md w-full">
+                
+                <div class="hidden md:grid grid-cols-12 gap-4 pb-4 border-b border-outline-variant text-on-surface-variant font-label-lg text-label-lg">
+                    <div class="col-span-6 flex items-center gap-3">
+                        <input type="checkbox" id="check-all" class="w-5 h-5 rounded border-outline-variant text-primary cursor-pointer focus:ring-primary">
+                        <span>SẢN PHẨM</span>
+                    </div>
+                    <div class="col-span-2 text-center">GIÁ TIỀN</div>
+                    <div class="col-span-2 text-center">SỐ LƯỢNG</div>
+                    <div class="col-span-2 text-right">TỔNG</div>
+                </div>
+
+                <div th:each="item : ${cartItems}" class="product-row grid grid-cols-1 md:grid-cols-12 gap-4 items-center py-stack-md bg-surface-container-lowest border border-outline-variant p-4 rounded-xl product-card-hover transition-all">
+                    
+                    <div class="col-span-1 md:col-span-6 flex items-center gap-4">
+                        <input type="checkbox" class="item-checkbox w-5 h-5 rounded border-outline-variant text-primary cursor-pointer focus:ring-primary" 
+                               th:data-price="${item.laptop.discountPrice != null ? item.laptop.discountPrice : item.laptop.price}"
+                               th:data-qty="${item.quantity}">
+                        <img th:src="${item.laptop.imageUrl}" class="w-24 h-24 object-contain bg-white rounded-lg border border-outline-variant">
+                        <div>
+                            <h3 class="font-headline-sm text-headline-sm text-primary line-clamp-2" th:text="${item.laptop.name}">Laptop</h3>
+                            <a th:href="@{/cart/remove/{id}(id=${item.id})}" class="mt-2 text-error font-label-md text-label-md flex items-center gap-1 hover:underline w-fit">
+                                <span class="material-symbols-outlined text-[18px]">delete</span> Xóa
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 text-center mr-4">
+                        <div class="font-price-lg text-price-lg text-secondary" th:text="${item.laptop.discountPrice != null ? #numbers.formatInteger(item.laptop.discountPrice, 3, 'POINT') : #numbers.formatInteger(item.laptop.price, 3, 'POINT')} + '₫'">0₫</div>
+                        <div th:if="${item.laptop.discountPrice != null}" class="font-body-sm text-body-sm text-on-surface-variant line-through" th:text="${#numbers.formatInteger(item.laptop.price, 3, 'POINT')} + '₫'">0₫</div>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 flex justify-center">
+                        <form th:action="@{/cart/update}" method="POST" class="flex items-center border border-outline-variant rounded-lg overflow-hidden h-10">
+                            <input type="hidden" name="itemId" th:value="${item.id}">
+                            <button type="submit" name="quantity" th:value="${item.quantity - 1}" class="px-3 hover:bg-surface-container-low h-full transition bg-white">-</button>
+                            <input type="number" name="quantity" class="w-12 text-center border-none focus:ring-0 font-body-md text-body-md bg-white" th:value="${item.quantity}" min="1" onchange="this.form.submit()">
+                            <button type="submit" name="quantity" th:value="${item.quantity + 1}" class="px-3 hover:bg-surface-container-low h-full transition bg-white">+</button>
+                        </form>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 text-right font-price-lg text-price-lg text-primary row-total">
+                        <span th:text="${#numbers.formatInteger((item.laptop.discountPrice != null ? item.laptop.discountPrice : item.laptop.price) * item.quantity, 3, 'POINT')} + '₫'">0₫</span>
+                    </div>
+                </div>
+
+                <div class="mt-stack-lg pt-stack-lg">
+                    <div class="flex flex-col md:flex-row justify-between items-center bg-surface-container-low p-6 rounded-xl mb-6 border border-outline-variant">
+                        <div class="text-on-surface-variant font-body-md mb-2 md:mb-0">
+                            Tổng cộng (<span id="selected-count" class="font-bold text-primary">0</span> sản phẩm đã chọn):
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div id="selected-total" class="text-headline-md font-bold text-primary">0₫</div>
+                            <a th:href="@{/checkout}" class="bg-[#fe6500] hover:bg-[#e65a00] text-white px-8 py-3 rounded-lg font-bold text-lg transition-all active:scale-95 shadow-md">ĐẶT HÀNG NGAY</a>
+                        </div>
+                    </div>
+                    <a th:href="@{/}" class="inline-flex items-center gap-2 font-body-md text-body-md text-primary hover:text-primary-container transition-colors group">
+                        <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                        Tiếp tục mua sắm
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        // JS đã được làm gọn lại vì mọi tính toán giờ do Backend lo
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkAllBtn = document.getElementById('check-all');
+            const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+            
+            function calculateTotal() {
+                let totalAmount = 0;
+                let count = 0;
+
+                itemCheckboxes.forEach((checkbox) => {
+                    if (checkbox.checked) {
+                        const quantity = parseInt(checkbox.dataset.qty) || 1;
+                        const price = parseFloat(checkbox.dataset.price);
+                        
+                        totalAmount += (price * quantity);
+                        count += 1;
+                    }
+                });
+
+                document.getElementById('selected-count').innerText = count;
+                document.getElementById('selected-total').innerText = totalAmount.toLocaleString('vi-VN') + '₫';
+            }
+
+            if(checkAllBtn) {
+                checkAllBtn.addEventListener('change', (e) => {
+                    itemCheckboxes.forEach(cb => cb.checked = e.target.checked);
+                    calculateTotal();
+                });
+            }
+
+            itemCheckboxes.forEach(cb => {
+                cb.addEventListener('change', calculateTotal);
+            });
+            
+            // Mặc định tick chọn tất cả khi mới vào trang
+            if(checkAllBtn) {
+                checkAllBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

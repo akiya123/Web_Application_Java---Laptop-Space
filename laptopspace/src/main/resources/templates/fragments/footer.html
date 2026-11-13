@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+    <footer th:fragment="footer" class="bg-primary dark:bg-surface-container-highest text-on-primary dark:text-primary-fixed w-full mt-stack-xl border-t border-outline-variant dark:border-outline">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-stack-xl max-w-container-max mx-auto">
+            <div class="flex flex-col gap-stack-md">
+                <span class="text-headline-sm font-headline-sm font-bold text-on-primary dark:text-inverse-on-surface">
+                    LaptopSpace
+                </span>
+                <p class="font-body-sm text-body-sm text-on-primary-container opacity-80">
+                    Chuyên cung cấp các dòng laptop chính hãng, uy tín và chất lượng tại Việt Nam.
+                </p>
+            </div>
+            <div class="flex flex-col gap-stack-sm">
+                <h4 class="font-label-lg text-label-lg font-bold mb-2">Hỗ Trợ Khách Hàng</h4>
+                <a class="font-body-sm text-body-sm text-on-primary-container hover:underline hover:text-on-primary transition-all duration-300 ease-in-out" href="#">Chính sách bảo hành</a>
+                <a class="font-body-sm text-body-sm text-on-primary-container hover:underline hover:text-on-primary transition-all duration-300 ease-in-out" href="#">Hướng dẫn thanh toán</a>
+            </div>
+            <div class="flex flex-col gap-stack-sm">
+                <h4 class="font-label-lg text-label-lg font-bold mb-2">Về LaptopSpace</h4>
+                <a class="font-body-sm text-body-sm text-on-primary-container hover:underline hover:text-on-primary transition-all duration-300 ease-in-out" href="#">Hệ thống cửa hàng</a>
+                <a class="font-body-sm text-body-sm text-on-primary-container hover:underline hover:text-on-primary transition-all duration-300 ease-in-out" href="#">Tuyển dụng</a>
+            </div>
+            <div class="flex flex-col gap-stack-sm">
+                <h4 class="font-label-lg text-label-lg font-bold mb-2">Liên Hệ</h4>
+                <a class="font-body-sm text-body-sm text-on-primary-container hover:underline hover:text-on-primary transition-all duration-300 ease-in-out flex items-center gap-2" href="#">
+                    <span class="material-symbols-outlined text-[18px]">call</span>
+                    Tổng đài hỗ trợ: 1800 xxxx
+                </a>
+                <div class="flex gap-4 mt-2">
+                    <div class="w-8 h-8 rounded-full bg-on-primary/20 flex items-center justify-center">FB</div>
+                    <div class="w-8 h-8 rounded-full bg-on-primary/20 flex items-center justify-center">YT</div>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-on-primary/20 py-stack-md text-center">
+            <p class="font-body-sm text-body-sm text-on-primary-container opacity-60">
+                © 2026 LaptopSpace Vietnam. All rights reserved.
+            </p>
+        </div>
+		
+		<script>
+		function addLaptopToCompare(laptopId) {
+		    // 1. Lấy mảng từ LocalStorage ra (nếu chưa có thì tạo mảng rỗng)
+		    let compareList = JSON.parse(localStorage.getItem('compareList')) || [];
+		    
+		    // 2. Kiểm tra xem máy này đã có trong list chưa, nếu có rồi thì báo
+		    if(compareList.includes(laptopId)) {
+		        alert("Sản phẩm này đã có trong danh sách so sánh!");
+		        return;
+		    }
+		    
+		    // 3. Nếu chưa đủ 3 thì nhét thêm vào, đủ 3 rồi thì báo lỗi
+		    if(compareList.length >= 3) {
+		        alert("Chỉ được so sánh tối đa 3 sản phẩm cùng lúc. Vui lòng xóa bớt máy cũ!");
+		        // (Tùy chọn) Chuyển hướng luôn vào trang compare để khách tự xóa bớt
+		        goToComparePage(compareList);
+		        return;
+		    }
+		    
+		    compareList.push(laptopId);
+		    localStorage.setItem('compareList', JSON.stringify(compareList));
+		    
+		    // 4. Báo thành công và có thể tự động chuyển sang trang so sánh luôn
+		    if (confirm("Đã thêm vào so sánh! Bạn có muốn đi đến trang so sánh luôn không?")) {
+		        goToComparePage(compareList);
+		    }
+		}
+
+		function goToComparePage(list) {
+		    let url = '/compare?';
+		    // Lặp qua mảng để tạo URL: /compare?id1=5&id2=10&id3=15
+		    list.forEach((id, index) => {
+		        url += `id${index + 1}=${id}&`;
+		    });
+		    window.location.href = url;
+		}
+		</script>
+    </footer>
+
+</body>
+</html>

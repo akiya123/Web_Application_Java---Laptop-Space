@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Khuyến mãi - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden text-gray-800">
+
+    <div th:replace="~{admin/fragments/sidebar :: sidebar('promotions')}"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        <header class="h-20 bg-white border-b border-gray-200 flex items-center px-8 shrink-0 shadow-sm">
+            <h1 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#fe6500]">campaign</span> Quản lý Chiến dịch Khuyến mãi
+            </h1>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            
+            <div th:if="${param.success}" class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl flex items-center gap-2">
+                <span class="material-symbols-outlined">check_circle</span> Đã áp dụng giảm giá hàng loạt thành công!
+            </div>
+            <div th:if="${param.cleared}" class="mb-6 p-4 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl flex items-center gap-2">
+                <span class="material-symbols-outlined">info</span> Đã gỡ bỏ toàn bộ giá Sale của danh mục.
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+                    <h2 class="text-lg font-bold text-[#003f87] mb-6 flex items-center gap-2 border-b pb-3">
+                        <span class="material-symbols-outlined">category</span> Áp dụng Sale theo Danh mục
+                    </h2>
+                    
+                    <form th:action="@{/admin/promotions/apply-category}" method="POST" class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-2">Chọn Danh mục cần Sale</label>
+                            <select name="categoryId" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-[#003f87]">
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}">Danh mục</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-2">Mức giảm giá (%)</label>
+                            <div class="relative">
+                                <input name="discountPercent" type="number" required min="1" max="99" class="w-full border border-gray-300 rounded-lg pl-4 pr-10 py-2.5 focus:ring-[#003f87]" placeholder="Ví dụ: 10, 15, 20...">
+                                <span class="absolute right-4 top-2.5 text-gray-500 font-bold">%</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-2">* Hệ thống sẽ tự động tính toán và cập nhật giá mới cho toàn bộ sản phẩm trong danh mục này.</p>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-[#fe6500] hover:bg-[#e65a00] text-white font-bold rounded-lg transition shadow-md">
+                            ÁP DỤNG MỨC GIẢM
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+                    <h2 class="text-lg font-bold text-red-600 mb-6 flex items-center gap-2 border-b pb-3">
+                        <span class="material-symbols-outlined">block</span> Gỡ bỏ Khuyến mãi
+                    </h2>
+                    
+                    <form th:action="@{/admin/promotions/clear-category}" method="POST" class="space-y-5">
+                        <p class="text-sm text-gray-600 mb-4">Sử dụng tính năng này khi chiến dịch sale kết thúc. Tất cả sản phẩm trong danh mục sẽ quay về giá gốc ban đầu.</p>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-2">Chọn Danh mục muốn hủy Sale</label>
+                            <select name="categoryId" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-red-500">
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}">Danh mục</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition shadow-md" onclick="return confirm('Bạn có chắc chắn muốn gỡ toàn bộ giá khuyến mãi của danh mục này không?');">
+                            GỠ KHUYẾN MÃI NGAY
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</body>
+</html>
