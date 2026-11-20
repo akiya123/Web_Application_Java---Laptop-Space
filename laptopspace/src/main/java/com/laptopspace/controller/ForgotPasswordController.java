@@ -48,10 +48,10 @@ public class ForgotPasswordController {
         //user.setPassword(passwordEncoder.encode(newRandomPassword)); - hàm băm
         user.setPassword(newRandomPassword);
         userRepository.save(user);
-
-        // 3. Gửi mật khẩu mới vào Email của khách
         try {
+            // 1. Gửi mail trước để đảm bảo gửi thành công
             SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("namhocvuive@gmail.com");
             message.setTo(email);
             message.setSubject("Khôi phục mật khẩu - LaptopSpace");
             message.setText("Xin chào " + user.getFullName() + ",\n\n"
@@ -59,15 +59,21 @@ public class ForgotPasswordController {
                     + "Mật khẩu mới của bạn là: " + newRandomPassword + "\n\n"
                     + "Vui lòng đăng nhập và đổi lại mật khẩu ngay để đảm bảo an toàn.\n"
                     + "Trân trọng,\nĐội ngũ LaptopSpace.");
-            
+
             mailSender.send(message);
+
+            // 2. Gửi thành công mới mã hóa BCrypt và lưu vào DB
+            user.setPassword(newRandomPassword);
+            // user.setPassword(passwordEncoder.encode(newRandomPassword));
+            userRepository.save(user);
+
             ra.addFlashAttribute("success", "Thành công! Mật khẩu mới đã được gửi vào hộp thư của bạn.");
-            
+            return "redirect:/login";
+
         } catch (Exception e) {
+            e.printStackTrace(); // In chi tiết lỗi ra log PM2 để dễ kiểm tra
             ra.addFlashAttribute("error", "Lỗi gửi mail: Kiểm tra lại cấu hình kết nối Internet hoặc App Password!");
-            return "redirect:/forgot-password";
+            return "redirect:/forgot-password";       
         }
-        
-        return "redirect:/login";
     }
 }
